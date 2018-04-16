@@ -1,0 +1,102 @@
+{
+    "dataRoles": [
+        {
+            "displayName": "Location",
+            "name": "category",
+            "kind": "Grouping"
+        },
+        {
+            "displayName": "Latitude",
+            "name": "ltd",
+            "kind": "Measure"
+        },
+        {
+            "displayName": "Longitude",
+            "name": "lng",
+            "kind": "Measure"
+        },
+        {
+            "displayName": "Measure",
+            "name": "measure",
+            "kind": "Measure"
+        }
+    ],
+    "dataViewMappings": [
+        {
+            "categorical": {
+                "categories": {
+                    "for": {
+                        "in": "category"
+                    },
+                    "dataReductionAlgorithm": {
+                        "top": {}
+                    }
+                },
+                "values": {
+                    "select": [
+                        {
+                            "bind": {
+                                "to": "measure"
+                            }
+                        },
+                        {
+                            "bind": {
+                                "to": "ltd"
+                            }
+                        },
+                        {
+                            "bind": {
+                                "to": "lng"
+                            }
+                        }
+                    ]
+                }
+            }
+        }
+    ],
+    "objects": {
+        "settings": {
+            "displayName": "Settings",
+            "properties": {
+                "dummySetting": {
+                    "displayName": "Dummy Setting",
+                    "type": {
+                       "text": true
+                    }
+                },
+                "apiKey": {
+                    "displayName": "API Key",
+                    "type": {
+                       "text": true
+                    }
+                },
+                "zoomLevel": {
+                    "displayName": "Zoom Level",
+                    "type": {
+                       "numeric": true
+                    }
+                },
+                "mapType": {
+                     "displayName": "Map Type",
+                    "type": {
+                        "enumeration": [
+                        {
+                            "value": "MAPANDSTREETVIEW",
+                            "displayName": "Map & Street View"
+                        },
+                        {
+                            "value": "MAP",
+                            "displayName": "Map"
+                        },
+                        {
+                            "value": "STREETVIEW",
+                            "displayName": "Street View"
+                        }
+                        
+                    ]
+                }
+                }
+            }
+        }
+    }
+}
