@@ -1,6 +1,7 @@
 // OK Address + Long/Lat
 // OK Zoom level
 // OK Street, Map or Both
+// TODO: Toggle Map/Street
 
 module powerbi.extensibility.visual {
     "use strict";
@@ -50,6 +51,11 @@ module powerbi.extensibility.visual {
         private mapDiv: HTMLElement;
         private panoDiv: HTMLElement;
         private googleScript: d3.Selection<SVGElement>;
+        private activeToggle: string = "STREET"; // STREET or MAP
+        private divTogglerHTMLInit: string = "<div class='txtCell'>Map</div><label class='switch'><input type='checkbox' id='chartToggler'><span class='slider round'></span></label><div class='txtCell'>Street</div>";
+        private divToggler: HTMLElement;
+        private GMap: any;
+        private GPanorama: any;
 
         constructor(options: VisualConstructorOptions) {
             this.host = options.host;
@@ -66,14 +72,51 @@ module powerbi.extensibility.visual {
 			panoDiv.style.height = "50%";
             this.element.appendChild(panoDiv);
 
+            let divToggler = this.divToggler = document.createElement("div");
+            this.element.appendChild(divToggler);
+            divToggler.className = "toggleContainer";
+            divToggler.innerHTML = this.divTogglerHTMLInit;
+            var thisRef = this;
+            $("#chartToggler").on("click", function() {thisRef.toggleChart();} );
+
             this.googleScript = null;
         }
+
+        public toggleChart() {
+            this.activeToggle = this.activeToggle==="STREET" ? "MAP" : "STREET";
+            this.setHeightForToggle();
+            this.updateGoogleAfterToggle();
+        }
+
+        private setHeightForToggle() {
+            if ( this.activeToggle === "STREET" ) {
+                this.mapDiv.style.height = "100%";
+                this.panoDiv.style.height = "0%";   
+            } else {
+                this.mapDiv.style.height = "0%";
+                this.panoDiv.style.height = "100%";   
+            }
+        }
+
+        private updateGoogleAfterToggle() {
+            const google = window['google'] || window.window['google'];
+            this.GPanorama.setZoom(0);
+            google.maps.event.trigger(this.GPanorama, 'resize')
+        }
+
 
         private initGoogleMaps() {
             const google = window['google'] || window.window['google'];
             if ( this.settings.settings.mapType === "MAPANDSTREETVIEW" ) {
                 this.mapDiv.style.height = "50%";
                 this.panoDiv.style.height = "50%";
+            } else if ( this.settings.settings.mapType === "MAPANDSTREETVIEWTOGGLE" ) {
+                var thisRef = this;
+                this.mapDiv.style.height = "100%";
+                this.panoDiv.style.height = "0%";
+                this.activeToggle = "STREET";
+                this.divToggler.innerHTML = this.divTogglerHTMLInit;
+                $("#chartToggler").on("click", function() {thisRef.toggleChart();} );
             } else if ( this.settings.settings.mapType === "MAP" ) {
                 this.mapDiv.style.height = "100%";
                 this.panoDiv.style.height = "0%";
@@ -89,15 +132,15 @@ module powerbi.extensibility.visual {
                     async: true
                 })
                 .on('load', () => {
-                    this.initStreetView();
+                    this.initMapAndStreetView();
                 });      
             }
             else {
-                this.initStreetView();
+                this.initMapAndStreetView();
             }
         } 
 
-        private initStreetView() {
+        private initMapAndStreetView() {
             const google = window['google'] || window.window['google'];
 
             var geocoder = new google.maps.Geocoder();
@@ -114,13 +157,13 @@ module powerbi.extensibility.visual {
                         //console.log( results[0].geometry.location.lat() );
                         //var fenway = {lat: 57.885701, lng: 12.051298};
                         var fenway = {lat: results[0].geometry.location.lat(), lng: results[0].geometry.location.lng()};
-                        var map = new google.maps.Map(thisRef.mapDiv, {
+                        var map = thisRef.GMap = new google.maps.Map(thisRef.mapDiv, {
                         center: fenway,
     //                    center: results[0].geometry.location,
     //                    mapTypeId: google.maps.MapTypeId.ROADMAP,
                         zoom: thisRef.settings.settings.zoomLevel
                         });
-                        var panorama = new google.maps.StreetViewPanorama(
+                        var panorama =  thisRef.GPanorama = new google.maps.StreetViewPanorama(
                             thisRef.panoDiv, {
                             position: fenway,
                             pov: {
@@ -135,13 +178,12 @@ module powerbi.extensibility.visual {
             else {
                 // TODO: Remove duplicate code
                 // We already have ltd/lng, no need to geocode
-                console.log("LONGLAT");
                 var fenway = {lat: ltd, lng:lng};
-                var map = new google.maps.Map(thisRef.mapDiv, {
+                var map = thisRef.GMap = new google.maps.Map(thisRef.mapDiv, {
                 center: fenway,
                 zoom: thisRef.settings.settings.zoomLevel
                 });
-                var panorama = new google.maps.StreetViewPanorama(
+                var panorama = thisRef.GPanorama = new google.maps.StreetViewPanorama(
                     thisRef.panoDiv, {
                     position: fenway,
                     pov: {

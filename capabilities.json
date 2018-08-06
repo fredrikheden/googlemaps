@@ -58,12 +58,6 @@
         "settings": {
             "displayName": "Settings",
             "properties": {
-                "dummySetting": {
-                    "displayName": "Dummy Setting",
-                    "type": {
-                       "text": true
-                    }
-                },
                 "apiKey": {
                     "displayName": "API Key",
                     "type": {
@@ -81,16 +75,20 @@
                     "type": {
                         "enumeration": [
                         {
-                            "value": "MAPANDSTREETVIEW",
-                            "displayName": "Map & Street View"
-                        },
-                        {
                             "value": "MAP",
                             "displayName": "Map"
                         },
                         {
                             "value": "STREETVIEW",
                             "displayName": "Street View"
+                        },
+                        {
+                            "value": "MAPANDSTREETVIEW",
+                            "displayName": "Map & Street View"
+                        },
+                        {
+                            "value": "MAPANDSTREETVIEWTOGGLE",
+                            "displayName": "Map & Street View Toggle"
                         }
                         
                     ]
