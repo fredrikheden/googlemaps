@@ -196,8 +196,13 @@ module powerbi.extensibility.visual {
         }
 
         public update(options: VisualUpdateOptions) {
-            
             this.settings = Visual.parseSettings(options && options.dataViews && options.dataViews[0]);        
+
+            if ( this.settings.settings.mapType !== "MAPANDSTREETVIEWTOGGLE") {
+                this.divToggler.style.display = "none";
+            } else {
+                this.divToggler.style.display = "";
+            }
 
             this.model = visualTransform(options, this.host, this);
             let width = options.viewport.width;
