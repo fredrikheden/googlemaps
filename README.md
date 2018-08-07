@@ -1,9 +1,11 @@
 # Google Maps / Street View custom visual for Power BI
 
-Google Maps / Street View by Fredrik Hedenström is used to visualize a google map with street view in Power BI. Only the first data point is visualized.
+Google Maps / Street View by Fredrik HedenstrÃ¶m is used to visualize a google map with street view in Power BI. Only the first data point is visualized.
+
+![Alt text](assets/Screendump1.png?raw=true "Title")
 
 ### Copyrights
 
-Copyright (c) 2018 Fredrik Hedenström
+Copyright (c) 2018 Fredrik HedenstrÃ¶m
 
 See the [LICENSE](/LICENSE) file for license rights and limitations (MIT).
