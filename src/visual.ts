@@ -1,7 +1,3 @@
-// OK Address + Long/Lat
-// OK Zoom level
-// OK Street, Map or Both
-// TODO: Toggle Map/Street
 
 module powerbi.extensibility.visual {
     "use strict";
@@ -22,13 +18,13 @@ module powerbi.extensibility.visual {
         let measureIndex = Utils.getColumnIndex(dataViews[0].metadata, "measure");
         let ltdIndex = Utils.getColumnIndex(dataViews[0].metadata, "ltd");
         let lngIndex = Utils.getColumnIndex(dataViews[0].metadata, "lng");
-        let categoryIndex = Utils.getColumnIndex(dataViews[0].metadata, "category");
+        let locationIndex = Utils.getColumnIndex(dataViews[0].metadata, "location");
         
         let visualDataPoints: VisualDataPoint[] = [];
         for( var i = 0; i < dataViews[0].table.rows.length; i++) {
             var row = dataViews[0].table.rows[i];
             visualDataPoints.push({
-                location:  categoryIndex !== null ? <string>row[categoryIndex] : null,
+                location:  locationIndex !== null ? <string>row[locationIndex] : null,
                 measure: measureIndex !== null ? <number>row[measureIndex] : null,
                 ltd: ltdIndex !== null ? <number>row[ltdIndex] : null,
                 lng: lngIndex !== null ? <number>row[lngIndex] : null,
@@ -154,13 +150,9 @@ module powerbi.extensibility.visual {
                     'address': addressToGeoCode
                 }, function(results, status) {
                     if (status == google.maps.GeocoderStatus.OK) {
-                        //console.log( results[0].geometry.location.lat() );
-                        //var fenway = {lat: 57.885701, lng: 12.051298};
                         var fenway = {lat: results[0].geometry.location.lat(), lng: results[0].geometry.location.lng()};
                         var map = thisRef.GMap = new google.maps.Map(thisRef.mapDiv, {
                         center: fenway,
-    //                    center: results[0].geometry.location,
-    //                    mapTypeId: google.maps.MapTypeId.ROADMAP,
                         zoom: thisRef.settings.settings.zoomLevel
                         });
                         var panorama =  thisRef.GPanorama = new google.maps.StreetViewPanorama(
@@ -176,8 +168,6 @@ module powerbi.extensibility.visual {
                 });
             }
             else {
-                // TODO: Remove duplicate code
-                // We already have ltd/lng, no need to geocode
                 var fenway = {lat: ltd, lng:lng};
                 var map = thisRef.GMap = new google.maps.Map(thisRef.mapDiv, {
                 center: fenway,
@@ -207,10 +197,6 @@ module powerbi.extensibility.visual {
             this.model = visualTransform(options, this.host, this);
             let width = options.viewport.width;
             let height = options.viewport.height;
-//            this.svg.attr("width", width).attr("height", height);
-//            this.initStreetView();
-//            this.element.style.width = width + "px";
-//            this.element.style.height = height + "px";
 
             //this.initGoogleMaps();
             this.initGoogleMaps();

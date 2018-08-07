@@ -4,6 +4,8 @@ Google Maps / Street View by Fredrik Hedenström is used to visualize a google m
 
 ![Alt text](assets/Screendump1.png?raw=true "Title")
 
+Location, Latitude and Longitude must all be present in order to visualize a data point.
+
 ### Copyrights
 
 Copyright (c) 2018 Fredrik Hedenström
