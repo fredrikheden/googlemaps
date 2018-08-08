@@ -4,7 +4,7 @@ Google Maps / Street View by Fredrik Hedenström is used to visualize a google m
 
 ![Alt text](assets/Screendump1.png?raw=true "Title")
 
-Location, Latitude and Longitude must all be present in order to visualize a data point.
+Location must be present in order to visualize a data point. To improve accuracy, also use Latitude and Longitude.
 
 ### Copyrights
 
